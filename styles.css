@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+header { text-align: center; padding: 10px; background: #f0f0f0; }
+nav ul { list-style: none; padding: 0; }
+nav li { display: block; margin: 10px; } /* Mobile: stacked */
+main { padding: 20px; }
+@media (min-width: 768px) { /* Desktop: inline */
+    nav li { display: inline; }
+}
