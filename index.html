@@ -3,29 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VYBEX - Startseite</title>
+    <title>VYBEX - Fashion Innovation mit AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <header>
-        <h1>VYBEX</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Produkte</a></li>
-                <li><a href="#">Shop</a></li>
-                <li><a href="#">Partner</a></li>
-            </ul>
-        </nav>
+<body class="bg-white">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <img src="assets/Logo_Transparent.png" alt="VYBEX Logo" class="h-10 w-10 object-contain">
+                    <h1 class="text-2xl font-bold text-gray-900">VYBEX</h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#products" class="text-gray-700 hover:text-gray-900 font-medium">Produkte</a>
+                    <a href="#features" class="text-gray-700 hover:text-gray-900 font-medium">Features</a>
+                    <a href="#testimonials" class="text-gray-700 hover:text-gray-900 font-medium">Bewertungen</a>
+                </nav>
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="text-gray-700 hover:text-gray-900">🛒 Warenkorb</button>
+                    <button class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">Login</button>
+                </div>
+                <!-- Mobile menu button -->
+                <button class="md:hidden p-2" id="menuBtn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile menu -->
+            <nav id="mobileMenu" class="md:hidden mt-4 space-y-2 hidden pb-4 border-t">
+                <a href="#products" class="block text-gray-700 hover:text-gray-900 py-2">Produkte</a>
+                <a href="#features" class="block text-gray-700 hover:text-gray-900 py-2">Features</a>
+                <a href="#testimonials" class="block text-gray-700 hover:text-gray-900 py-2">Bewertungen</a>
+                <button class="w-full text-left text-gray-700 hover:text-gray-900 py-2">🛒 Warenkorb</button>
+            </nav>
+        </div>
     </header>
+
     <main>
-        <section>
-            <h2>Willkommen bei VYBEX</h2>
-            <p>Probieren Sie Kleidung virtuell mit AI!</p>
+        <!-- Hero Section with Image -->
+        <section class="relative h-screen md:h-[600px] flex items-center">
+            <div class="absolute inset-0 w-full h-full">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=600&fit=crop" alt="Fashion Hero" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            </div>
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white text-center w-full">
+                <h2 class="text-4xl md:text-6xl font-bold mb-4">Zukunft der Mode</h2>
+                <p class="text-xl md:text-2xl text-gray-200 mb-8">Probieren Sie Kleidung virtuell mit KI-Technologie</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        Jetzt starten
+                    </button>
+                    <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition">
+                        Mehr erfahren
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="bg-gray-50 py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Warum VYBEX?</h3>
+                    <p class="text-lg text-gray-600">Die revolutionäre Lösung für Online-Fashion-Shopping</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white rounded-lg p-8 shadow-md hover:shadow-lg transition">
+                        <div class="text-4xl mb-4">🤖</div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-3">KI-gesteuerte Anpassung</h4>
+                        <p class="text-gray-600">Unsere KI passt Kleidung an Ihre Körpermaße und Ihren Stil an</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-white rounded-lg p-8 shadow-md hover:shadow-lg transition">
+                        <div class="text-4xl mb-4">📱</div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-3">Mobil optimiert</h4>
+                        <p class="text-gray-600">Nutzen Sie VYBEX überall - auf Ihrem Smartphone oder Computer</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-white rounded-lg p-8 shadow-md hover:shadow-lg transition">
+                        <div class="text-4xl mb-4">✅</div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-3">Sichere Rückgaben</h4>
+                        <p class="text-gray-600">30 Tage Rückgaberecht - 100% zufrieden oder Geld zurück</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section id="products" class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trending Jetzt</h3>
+                    <p class="text-lg text-gray-600">Die heißesten Mode-Trends dieser Saison</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Product 1 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
+                        <div class="relative h-64 overflow-hidden bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=500&fit=crop" alt="Schwarzes T-Shirt" class="w-full h-full object-cover group-hover:scale-105 transition">
+                            <span class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">-20%</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-1">Premium T-Shirt</h4>
+                            <p class="text-gray-600 text-sm mb-3">100% Bio-Baumwolle</p>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="text-sm text-gray-500 line-through">59€</span>
+                                    <span class="text-2xl font-bold text-gray-900 ml-2">47€</span>
+                                </div>
+                                <button class="bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition">
+                                    🛒
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Product 2 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
+                        <div class="relative h-64 overflow-hidden bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1542272604-787c62d465d1?w=500&h=500&fit=crop" alt="Denim Jeans" class="w-full h-full object-cover group-hover:scale-105 transition">
+                            <span class="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Neu</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-1">Designer Jeans</h4>
+                            <p class="text-gray-600 text-sm mb-3">Skinny Fit - Alle Größen</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-gray-900">89€</span>
+                                <button class="bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition">
+                                    🛒
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Product 3 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
+                        <div class="relative h-64 overflow-hidden bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1539533057592-4ee82f440962?w=500&h=500&fit=crop" alt="Sommer Kleid" class="w-full h-full object-cover group-hover:scale-105 transition">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-1">Sommer Maxikleid</h4>
+                            <p class="text-gray-600 text-sm mb-3">Leichte & luftig</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-gray-900">69€</span>
+                                <button class="bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition">
+                                    🛒
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Product 4 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition group">
+                        <div class="relative h-64 overflow-hidden bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&h=500&fit=crop" alt="Sonnenbrillen" class="w-full h-full object-cover group-hover:scale-105 transition">
+                            <span class="absolute top-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Bestseller</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-1">Fashion Accessoires</h4>
+                            <p class="text-gray-600 text-sm mb-3">Stilvolle Sonnenbrillen</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-gray-900">39€</span>
+                                <button class="bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition">
+                                    🛒
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="bg-gray-900 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition">
+                        Alle Produkte anzeigen
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="bg-gray-50 py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Was Kunden sagen</h3>
+                    <p class="text-lg text-gray-600">5+ Sterne von zufriedenen Kunden</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="flex text-yellow-400">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        <p class="text-gray-700 mb-4">"VYBEX hat mein Online-Shopping komplett verändert. Ich kann jetzt sehen, wie die Kleidung aussieht, bevor ich sie kaufe!"</p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Sarah M." class="w-12 h-12 rounded-full">
+                            <div class="ml-3">
+                                <p class="font-semibold text-gray-900">Sarah M.</p>
+                                <p class="text-sm text-gray-600">Berlin, Deutschland</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="flex text-yellow-400">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        <p class="text-gray-700 mb-4">"Die KI-Technologie ist unglaublich! Ich habe noch nie bessere Passform-Empfehlungen bekommen."</p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Marc K." class="w-12 h-12 rounded-full">
+                            <div class="ml-3">
+                                <p class="font-semibold text-gray-900">Marc K.</p>
+                                <p class="text-sm text-gray-600">München, Deutschland</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="flex text-yellow-400">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        <p class="text-gray-700 mb-4">"Der beste Online-Shop für Mode! Großartige Auswahl, schnelle Lieferung und toller Kundensupport."</p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="Lisa R." class="w-12 h-12 rounded-full">
+                            <div class="ml-3">
+                                <p class="font-semibold text-gray-900">Lisa R.</p>
+                                <p class="text-sm text-gray-600">Hamburg, Deutschland</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-16 md:py-24">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h3 class="text-3xl md:text-4xl font-bold mb-4">Bleiben Sie auf dem Laufenden</h3>
+                <p class="text-lg text-gray-300 mb-8">Erhalten Sie exklusive Angebote und neue Kollektionen direkt in Ihren Posteingang</p>
+                <form class="flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Ihre E-Mail-Adresse" class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
+                    <button type="submit" class="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        Abonnieren
+                    </button>
+                </form>
+                <p class="text-sm text-gray-400 mt-4">Wir versprechen, dass wir Ihre E-Mail nicht spammen werden 🤝</p>
+            </div>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2026 VYBEX - Bao & [Dein Name]</p>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Über VYBEX</h4>
+                    <p class="text-sm">Revolutionäre KI-Technologie für das perfekte Mode-Shopping-Erlebnis.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Shop</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Alle Produkte</a></li>
+                        <li><a href="#" class="hover:text-white transition">Sale</a></li>
+                        <li><a href="#" class="hover:text-white transition">New Arrivals</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Kontakt</a></li>
+                        <li><a href="#" class="hover:text-white transition">Versand & Rückgabe</a></li>
+                        <li><a href="#" class="hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Rechtlich</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Datenschutz</a></li>
+                        <li><a href="#" class="hover:text-white transition">Impressum</a></li>
+                        <li><a href="#" class="hover:text-white transition">AGB</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col sm:flex-row justify-between items-center">
+                    <p class="text-sm text-center sm:text-left">&copy; 2026 VYBEX - Die Zukunft der Mode. Alle Rechte vorbehalten.</p>
+                    <div class="flex space-x-6 mt-4 sm:mt-0">
+                        <a href="#" class="hover:text-white transition">Facebook</a>
+                        <a href="#" class="hover:text-white transition">Instagram</a>
+                        <a href="#" class="hover:text-white transition">Twitter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
+
     <script src="script.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuBtn').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when link is clicked
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+    </script>
 </body>
 </html>
