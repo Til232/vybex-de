@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { initDatabase } from './config/database.js';
 import brandRoutes from './routes/brands.js';
 import productRoutes from './routes/products.js';
+import tryOnRoutes from './routes/tryOn.js';
 import 'dotenv/config';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -22,6 +23,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // Routes
 app.use('/api/brands', brandRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/try-on', tryOnRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
