@@ -1,0 +1,32 @@
+{
+  "name": "vybex-backend",
+  "version": "1.0.0",
+  "description": "Multi-brand fashion shop backend",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "migrate": "node src/scripts/migrateAssets.js && node src/scripts/seedDatabase.js"
+  },
+  "keywords": [
+    "fashion",
+    "multi-brand",
+    "shop"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "fs-extra": "^11.3.3",
+    "multer": "^1.4.5-lts.1",
+    "sqlite": "^5.0.1",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
