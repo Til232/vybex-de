@@ -10,8 +10,8 @@ class SegmindVTONService {
     this.apiKey = process.env.SEGMIND_API_KEY;
     this.baseUrl = 'https://api.segmind.com/v1/tryon-diffusion';
     
-    if (!this.apiKey) {
-      throw new Error('SEGMIND_API_KEY environment variable is required');
+    if (!this.apiKey || this.apiKey === 'placeholder_key_replace_later') {
+      console.warn('⚠️  SEGMIND_API_KEY not configured. Virtual try-on features will be disabled.');
     }
   }
 

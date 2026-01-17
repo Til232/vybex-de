@@ -23,7 +23,7 @@ export const brandController = {
         color_secondary
       });
 
-      res.status(201).json(brand);
+      res.status(201).json({ success: true, data: brand });
     } catch (error) {
       if (error.message.includes('UNIQUE constraint failed')) {
         return res.status(400).json({ error: 'Brand name already exists' });
@@ -56,7 +56,13 @@ export const brandController = {
   async updateBrand(req, res) {
     try {
       const { id } = req.params;
-      const updates = req.body;
+      const { name, description, color_primary, color_secondary } = req.body;
+      
+      const updates = {};
+      if (name !== undefined) updates.name = name;
+      if (description !== undefined) updates.description = description;
+      if (color_primary !== undefined) updates.color_primary = color_primary;
+      if (color_secondary !== undefined) updates.color_secondary = color_secondary;
 
       if (req.file) {
         updates.logo_url = `/uploads/${req.body.type || 'logos'}/${req.file.filename}`;
@@ -67,7 +73,7 @@ export const brandController = {
         return res.status(404).json({ error: 'Brand not found' });
       }
 
-      res.json(brand);
+      res.json({ success: true, data: brand });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -3,448 +3,380 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VYBEX Admin Dashboard</title>
+  <title>VYBEX Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .form-group {
-      @apply mb-4;
-    }
-    .form-label {
-      @apply block text-sm font-medium text-gray-700 mb-2;
-    }
-    .form-input {
-      @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
-    }
-    .btn-primary {
-      @apply bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition;
-    }
-    .btn-secondary {
-      @apply bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400 transition;
-    }
-  </style>
 </head>
-<body class="bg-gray-50">
-  <div id="app">
-    <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0">
-      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <h1 class="text-2xl font-bold text-gray-900">VYBEX</h1>
-          <span class="text-gray-500">Admin Dashboard</span>
+<body class="bg-gray-100">
+  <nav class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-3xl font-bold text-gray-900">VYBEX Admin</h1>
+      <button onclick="openCreateBrandModal()" class="px-6 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700">+ Brand</button>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <div id="overviewContent" class="space-y-8">
+      <div class="text-center text-gray-500 py-12">Lädt...</div>
+    </div>
+  </div>
+
+  <div id="createBrandModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-lg p-8 max-w-2xl w-full my-8">
+      <h2 class="text-2xl font-bold mb-6">Neue Brand</h2>
+      <form id="createBrandForm" enctype="multipart/form-data" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Brand Name</label>
+          <input type="text" id="createBrandName" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
         </div>
-        <div class="flex gap-4">
-          <button class="px-4 py-2 text-gray-700 hover:text-gray-900">Dashboard</button>
-          <button class="px-4 py-2 text-gray-700 hover:text-gray-900">Brands</button>
-          <button class="px-4 py-2 text-gray-700 hover:text-gray-900">Products</button>
-          <button class="px-4 py-2 text-red-600 hover:text-red-700">Logout</button>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Brand Story</label>
+          <textarea id="createBrandDescription" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
         </div>
-      </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
-      <!-- Tabs -->
-      <div class="flex gap-4 mb-8 border-b border-gray-200">
-        <button class="tab-btn active px-4 py-2 border-b-2 border-blue-600 text-blue-600 font-medium" data-tab="brands">
-          Manage Brands
-        </button>
-        <button class="tab-btn px-4 py-2 border-b-2 border-transparent text-gray-700 font-medium hover:text-gray-900" data-tab="products">
-          Manage Products
-        </button>
-        <button class="tab-btn px-4 py-2 border-b-2 border-transparent text-gray-700 font-medium hover:text-gray-900" data-tab="wardrobe">
-          User Wardrobes
-        </button>
-        <button class="tab-btn px-4 py-2 text-gray-600 font-medium" data-tab="products">
-          Manage Products
-        </button>
-      </div>
-
-      <!-- Brands Tab -->
-      <div id="brands-tab" class="tab-content">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Create Brand Form -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-6">Create New Brand</h2>
-            <form id="brandForm" enctype="multipart/form-data">
-              <div class="form-group">
-                <label class="form-label">Brand Name *</label>
-                <input type="text" name="name" class="form-input" placeholder="e.g., Nike" required>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea name="description" class="form-input" rows="3" placeholder="Brand story and details..."></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Brand Logo *</label>
-                <input type="file" name="logo" accept="image/*" class="form-input" required>
-                <p class="text-sm text-gray-500 mt-1">Max 5MB. PNG, JPG, WebP</p>
-              </div>
-
-              <div class="grid grid-cols-2 gap-4 mb-4">
-                <div class="form-group">
-                  <label class="form-label">Primary Color</label>
-                  <input type="color" name="color_primary" class="form-input" value="#000000">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Secondary Color</label>
-                  <input type="color" name="color_secondary" class="form-input" value="#FFFFFF">
-                </div>
-              </div>
-
-              <button type="submit" class="btn-primary w-full">Create Brand</button>
-            </form>
-          </div>
-
-          <!-- Brands List -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-6">Existing Brands</h2>
-            <div id="brandsList" class="space-y-4">
-              <div class="text-center text-gray-500 py-8">
-                Loading brands... or none created yet
-              </div>
-            </div>
-          </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Logo hochladen</label>
+          <input type="file" id="createBrandLogo" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
         </div>
-      </div>
 
-      <!-- Products Tab -->
-      <div id="products-tab" class="tab-content hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Create Product Form -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-6">Create New Product</h2>
-            <form id="productForm" enctype="multipart/form-data">
-              <div class="form-group">
-                <label class="form-label">Select Brand *</label>
-                <select name="brand_id" class="form-input" required>
-                  <option value="">Choose a brand...</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Product Name *</label>
-                <input type="text" name="name" class="form-input" placeholder="e.g., Air Max 90" required>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea name="description" class="form-input" rows="3" placeholder="Product details..."></textarea>
-              </div>
-
-              <div class="grid grid-cols-2 gap-4">
-                <div class="form-group">
-                  <label class="form-label">Price (EUR) *</label>
-                  <input type="number" name="price" class="form-input" placeholder="99.99" step="0.01" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Stock Quantity</label>
-                  <input type="number" name="stock_quantity" class="form-input" placeholder="0" min="0">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Category</label>
-                <select name="category" class="form-input">
-                  <option value="">Select category...</option>
-                  <option value="T-Shirts">T-Shirts</option>
-                  <option value="Jeans">Jeans</option>
-                  <option value="Hoodies">Hoodies</option>
-                  <option value="Sneakers">Sneakers</option>
-                  <option value="Accessories">Accessories</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Product Images *</label>
-                <input type="file" name="images" accept="image/*" multiple class="form-input" required>
-                <p class="text-sm text-gray-500 mt-1">Upload 1-10 images. Max 5MB each.</p>
-              </div>
-
-              <div class="form-group">
-                <label class="flex items-center gap-2">
-                  <input type="checkbox" name="is_featured" class="w-4 h-4">
-                  <span class="form-label mb-0">Featured Product</span>
-                </label>
-              </div>
-
-              <button type="submit" class="btn-primary w-full">Create Product</button>
-            </form>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+            <input type="color" id="createBrandPrimaryColor" class="w-full h-12 border border-gray-300 rounded-lg" value="#000000">
           </div>
-
-          <!-- Products List -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-6">Products by Brand</h2>
-            <div id="productsList" class="space-y-4">
-              <div class="text-center text-gray-500 py-8">
-                Select a brand to view its products
-              </div>
-            </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
+            <input type="color" id="createBrandSecondaryColor" class="w-full h-12 border border-gray-300 rounded-lg" value="#FFFFFF">
           </div>
         </div>
 
-        <!-- Wardrobe Tab -->
-        <div id="wardrobe-tab" class="hidden space-y-6">
-          <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-6">User Wardrobes</h2>
-            <div class="mb-6">
-              <label class="form-label">Search User ID</label>
-              <div class="flex gap-2">
-                <input 
-                  type="text" 
-                  id="wardrobeUserSearch" 
-                  placeholder="Enter user ID..."
-                  class="form-input flex-1"
-                >
-                <button onclick="searchWardrobe()" class="btn-primary">Search</button>
-              </div>
-            </div>
-            <div id="wardrobeList" class="space-y-4">
-              <div class="text-center text-gray-500 py-8">
-                Enter a user ID to view their wardrobe
-              </div>
-            </div>
+        <div class="flex gap-2 pt-4">
+          <button type="submit" class="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700">Erstellen</button>
+          <button type="button" onclick="closeCreateBrandModal()" class="flex-1 px-4 py-3 bg-gray-300 text-gray-800 rounded-lg font-bold hover:bg-gray-400">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="editBrandModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-lg p-8 max-w-2xl w-full my-8">
+      <h2 class="text-2xl font-bold mb-6">Brand Bearbeiten</h2>
+      <form id="editBrandForm" enctype="multipart/form-data" class="space-y-6">
+        <input type="hidden" id="editBrandId">
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Brand Name</label>
+          <input type="text" id="editBrandName" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Brand Story</label>
+          <textarea id="editBrandDescription" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Logo hochladen</label>
+          <input type="file" id="editBrandLogo" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+          <p class="text-xs text-gray-500 mt-1">Neu hochladen um zu ändern</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+            <input type="color" id="editBrandPrimaryColor" class="w-full h-12 border border-gray-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
+            <input type="color" id="editBrandSecondaryColor" class="w-full h-12 border border-gray-300 rounded-lg">
           </div>
         </div>
-      </div>
+
+        <div class="flex gap-2 pt-4">
+          <button type="submit" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">Speichern</button>
+          <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-3 bg-gray-300 text-gray-800 rounded-lg font-bold hover:bg-gray-400">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-lg p-8 max-w-2xl w-full my-8">
+      <h2 class="text-2xl font-bold mb-6" id="productModalTitle">Produkt hinzufügen</h2>
+      <form id="productForm" enctype="multipart/form-data" class="space-y-6">
+        <input type="hidden" id="productBrandId">
+        <input type="hidden" id="productId">
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Produktname</label>
+          <input type="text" id="productName" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
+          <input type="number" id="productPrice" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Größe</label>
+          <input type="text" id="productSize" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="z.B. M, L, XL oder Schuhgröße">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Bild hochladen</label>
+          <input type="file" id="productImage" name="images" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+        </div>
+
+        <div class="flex gap-2 pt-4">
+          <button type="submit" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">Speichern</button>
+          <button type="button" onclick="closeProductModal()" class="flex-1 px-4 py-3 bg-gray-300 text-gray-800 rounded-lg font-bold hover:bg-gray-400">Abbrechen</button>
+        </div>
+      </form>
     </div>
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:5000/api';
-    let currentBrand = null;
+    const API_BASE = 'http://localhost:5001/api';
 
-    // Tab Navigation
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tabName = btn.dataset.tab;
-        
-        // Update active tab button
-        document.querySelectorAll('.tab-btn').forEach(b => {
-          b.classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
-          b.classList.add('text-gray-600');
-        });
-        btn.classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
-        btn.classList.remove('text-gray-600');
-
-        // Show/hide content
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
-      });
-    });
-
-    // Load and display brands
-    async function loadBrands() {
-      try {
-        const res = await fetch(`${API_BASE}/brands`);
-        const brands = await res.json();
-        
-        const list = document.getElementById('brandsList');
-        if (brands.length === 0) {
-          list.innerHTML = '<div class="text-center text-gray-500">No brands created yet</div>';
-        } else {
-          list.innerHTML = brands.map(brand => `
-            <div class="flex items-center justify-between p-4 border border-gray-200 rounded">
-              <div class="flex items-center gap-3 flex-1">
-                ${brand.logo_url ? `<img src="${API_BASE}${brand.logo_url}" alt="${brand.name}" class="h-10 w-10 rounded">` : '<div class="h-10 w-10 bg-gray-200 rounded"></div>'}
-                <div>
-                  <h3 class="font-medium">${brand.name}</h3>
-                  <p class="text-sm text-gray-500">${brand.description || 'No description'}</p>
-                </div>
-              </div>
-              <div class="flex gap-2">
-                <button class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200" onclick="editBrand('${brand.id}')">Edit</button>
-                <button class="px-3 py-1 text-sm bg-red-100 text-red-600 rounded hover:bg-red-200" onclick="deleteBrand('${brand.id}')">Delete</button>
-              </div>
-            </div>
-          `).join('');
-        }
-
-        // Update product form brand dropdown
-        const select = document.querySelector('select[name="brand_id"]');
-        select.innerHTML = '<option value="">Choose a brand...</option>' + brands.map(b => 
-          `<option value="${b.id}">${b.name}</option>`
-        ).join('');
-      } catch (error) {
-        console.error('Error loading brands:', error);
-        alert('Failed to load brands');
-      }
+    function openCreateBrandModal() {
+      document.getElementById('createBrandForm').reset();
+      document.getElementById('createBrandPrimaryColor').value = '#000000';
+      document.getElementById('createBrandSecondaryColor').value = '#FFFFFF';
+      document.getElementById('createBrandModal').classList.remove('hidden');
     }
 
-    // Create Brand
-    document.getElementById('brandForm').addEventListener('submit', async (e) => {
+    function closeCreateBrandModal() {
+      document.getElementById('createBrandModal').classList.add('hidden');
+      document.getElementById('createBrandForm').reset();
+    }
+
+    document.getElementById('createBrandForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(e.target);
+      const logoFile = document.getElementById('createBrandLogo').files[0];
+      
+      const formData = new FormData();
+      formData.append('name', document.getElementById('createBrandName').value);
+      formData.append('description', document.getElementById('createBrandDescription').value);
+      formData.append('color_primary', document.getElementById('createBrandPrimaryColor').value);
+      formData.append('color_secondary', document.getElementById('createBrandSecondaryColor').value);
+      formData.append('type', 'logos');
+      if (logoFile) {
+        formData.append('logo', logoFile);
+      }
 
       try {
         const res = await fetch(`${API_BASE}/brands`, {
           method: 'POST',
           body: formData
         });
-        if (res.ok) {
-          alert('Brand created successfully!');
-          e.target.reset();
-          loadBrands();
+        const result = await res.json();
+        if (result.success || result.id) {
+          alert('✅ Brand erstellt!');
+          closeCreateBrandModal();
+          loadOverview();
         } else {
-          alert('Failed to create brand');
+          alert('Fehler: ' + (result.error || 'Konnte nicht erstellen'));
         }
       } catch (error) {
-        console.error('Error creating brand:', error);
-        alert('Error creating brand');
+        alert('Fehler: ' + error.message);
       }
     });
 
-    // Create Product
-    document.getElementById('productForm').addEventListener('submit', async (e) => {
+    function openEditModal(brand) {
+      document.getElementById('editBrandId').value = brand.id;
+      document.getElementById('editBrandName').value = brand.name;
+      document.getElementById('editBrandDescription').value = brand.description || '';
+      document.getElementById('editBrandPrimaryColor').value = brand.color_primary || '#000000';
+      document.getElementById('editBrandSecondaryColor').value = brand.color_secondary || '#FFFFFF';
+      document.getElementById('editBrandModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editBrandModal').classList.add('hidden');
+      document.getElementById('editBrandForm').reset();
+    }
+
+    document.getElementById('editBrandForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(e.target);
+      const id = document.getElementById('editBrandId').value;
+      const logoFile = document.getElementById('editBrandLogo').files[0];
+      
+      const formData = new FormData();
+      formData.append('name', document.getElementById('editBrandName').value);
+      formData.append('description', document.getElementById('editBrandDescription').value);
+      formData.append('color_primary', document.getElementById('editBrandPrimaryColor').value);
+      formData.append('color_secondary', document.getElementById('editBrandSecondaryColor').value);
+      formData.append('type', 'logos');
+      if (logoFile) {
+        formData.append('logo', logoFile);
+      }
 
       try {
-        const res = await fetch(`${API_BASE}/products`, {
-          method: 'POST',
+        const res = await fetch(`${API_BASE}/brands/${id}`, {
+          method: 'PUT',
           body: formData
         });
-        if (res.ok) {
-          alert('Product created successfully!');
-          e.target.reset();
-          loadProducts(document.querySelector('select[name="brand_id"]').value);
+        const result = await res.json();
+        if (result.success || result.id) {
+          alert('✅ Brand gespeichert!');
+          closeEditModal();
+          loadOverview();
         } else {
-          alert('Failed to create product');
+          alert('Fehler: ' + (result.error || 'Konnte nicht speichern'));
         }
       } catch (error) {
-        console.error('Error creating product:', error);
-        alert('Error creating product');
+        alert('Fehler: ' + error.message);
       }
     });
 
-    // Load products for selected brand
-    document.querySelector('select[name="brand_id"]').addEventListener('change', async (e) => {
-      const brandId = e.target.value;
-      if (brandId) {
-        loadProducts(brandId);
-      }
-    });
+    function openProductModal(brandId, product = null) {
+      document.getElementById('productBrandId').value = brandId;
+      document.getElementById('productId').value = product ? product.id : '';
+      document.getElementById('productName').value = product ? product.name : '';
+      document.getElementById('productPrice').value = product ? product.price : '';
+      document.getElementById('productSize').value = product ? product.size : '';
+      document.getElementById('productModalTitle').textContent = product ? 'Produkt bearbeiten' : 'Produkt hinzufügen';
+      document.getElementById('productModal').classList.remove('hidden');
+    }
 
-    async function loadProducts(brandId) {
+    function closeProductModal() {
+      document.getElementById('productModal').classList.add('hidden');
+      document.getElementById('productForm').reset();
+    }
+
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const brandId = document.getElementById('productBrandId').value;
+      const productId = document.getElementById('productId').value;
+      const imageFile = document.getElementById('productImage').files[0];
+      
+      const formData = new FormData();
+      formData.append('name', document.getElementById('productName').value);
+      formData.append('price', document.getElementById('productPrice').value);
+      formData.append('size', document.getElementById('productSize').value);
+      formData.append('brand_id', brandId);
+      formData.append('type', 'products');
+      if (imageFile) {
+        formData.append('images', imageFile);
+      }
+
+      const url = productId ? `${API_BASE}/products/${productId}` : `${API_BASE}/products`;
+      const method = productId ? 'PUT' : 'POST';
+
       try {
-        const res = await fetch(`${API_BASE}/products/brand/${brandId}`);
-        const products = await res.json();
-
-        const list = document.getElementById('productsList');
-        if (products.length === 0) {
-          list.innerHTML = '<div class="text-center text-gray-500">No products for this brand</div>';
+        const res = await fetch(url, { method, body: formData });
+        const result = await res.json();
+        if (result.success || result.id) {
+          alert('✅ Produkt gespeichert!');
+          closeProductModal();
+          loadOverview();
         } else {
-          list.innerHTML = products.map(product => `
-            <div class="border border-gray-200 rounded p-4">
-              <div class="flex justify-between items-start mb-2">
-                <h3 class="font-medium">${product.name}</h3>
-                <span class="text-lg font-bold text-green-600">€${product.price.toFixed(2)}</span>
-              </div>
-              <p class="text-sm text-gray-500 mb-3">${product.description || 'No description'}</p>
-              <div class="flex justify-between items-center text-sm">
-                <span class="text-gray-600">Stock: ${product.stock_quantity}</span>
-                <div class="flex gap-2">
-                  <button class="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded" onclick="editProduct('${product.id}')">Edit</button>
-                  <button class="px-2 py-1 text-xs bg-red-100 text-red-600 rounded" onclick="deleteProduct('${product.id}')">Delete</button>
+          alert('Fehler: ' + (result.error || 'Konnte nicht speichern'));
+        }
+      } catch (error) {
+        alert('Fehler: ' + error.message);
+      }
+    });
+
+    async function loadOverview() {
+      try {
+        const brandsRes = await fetch(`${API_BASE}/brands`);
+        const brands = await brandsRes.json();
+        let html = '';
+        
+        if (!brands || brands.length === 0) {
+          html = '<div class="text-center text-gray-500 py-12 bg-white rounded-lg">Keine Brands</div>';
+        } else {
+          for (const brand of brands) {
+            const productsRes = await fetch(`${API_BASE}/products/brand/${brand.id}`);
+            const products = await productsRes.json() || [];
+
+            html += `
+              <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="p-8" style="background: linear-gradient(135deg, ${brand.color_primary}20 0%, ${brand.color_secondary}20 100%); border-left: 5px solid ${brand.color_primary}">
+                  <div class="flex gap-6 items-start justify-between mb-6">
+                    <div class="flex gap-6 flex-1">
+                      ${brand.logo_url ? `<img src="${API_BASE}${brand.logo_url}?t=${Date.now()}" alt="${brand.name}" class="h-20 w-20 object-contain bg-white p-2 rounded" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect fill=%22%23ddd%22 width=%2280%22 height=%2280%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2214%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3ELogo%3C/text%3E%3C/svg%3E'">` : '<div class="h-20 w-20 bg-gray-300 rounded flex items-center justify-center text-gray-500 text-xs">Logo</div>'}
+                      <div class="flex-1">
+                        <h3 class="text-3xl font-bold text-gray-900">${brand.name}</h3>
+                        <p class="text-gray-700 mt-2">${brand.description || 'Keine Beschreibung'}</p>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <button onclick='openEditModal(${JSON.stringify(brand).replace(/'/g, "&apos;")})' class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700">✏️ Bearbeiten</button>
+                      <button onclick="deleteBrand('${brand.id}')" class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700">🗑️ Löschen</button>
+                    </div>
+                  </div>
+
+                  <div class="mt-6">
+                    <div class="flex justify-between items-center mb-4">
+                      <h4 class="text-xl font-bold text-gray-800">Produkte (${products.length})</h4>
+                      <button onclick="openProductModal('${brand.id}')" class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700">+ Produkt</button>
+                    </div>
+                    
+                    ${products.length === 0 ? '<p class="text-gray-500 text-sm">Keine Produkte</p>' : `
+                      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${products.map(p => `
+                          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            ${p.image_url ? `<img src="${API_BASE}${p.image_url}?t=${Date.now()}" alt="${p.name}" class="w-full h-32 object-cover rounded mb-3" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22132%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22132%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2214%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3EKein Bild%3C/text%3E%3C/svg%3E'">` : '<div class="w-full h-32 bg-gray-300 rounded mb-3 flex items-center justify-center text-gray-500 text-xs">Kein Bild</div>'}
+                            <h5 class="font-bold text-gray-900">${p.name}</h5>
+                            <p class="text-gray-600 text-sm">Größe: ${p.size || '-'}</p>
+                            <p class="text-lg font-bold text-gray-900 mt-2">€${parseFloat(p.price).toFixed(2)}</p>
+                            <div class="flex gap-2 mt-3">
+                              <button onclick='openProductModal("${brand.id}", ${JSON.stringify(p).replace(/'/g, "&apos;")})' class="flex-1 px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">✏️</button>
+                              <button onclick="deleteProduct('${p.id}')" class="flex-1 px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700">🗑️</button>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+                    `}
+                  </div>
                 </div>
               </div>
-            </div>
-          `).join('');
+            `;
+          }
         }
-      } catch (error) {
-        console.error('Error loading products:', error);
-      }
-    }
-
-    // Placeholder functions for edit/delete
-    function editBrand(id) { alert('Edit brand: ' + id); }
-    function deleteBrand(id) { 
-      if (confirm('Delete this brand?')) {
-        fetch(`${API_BASE}/brands/${id}`, { method: 'DELETE' })
-          .then(() => loadBrands())
-          .catch(err => console.error(err));
-      }
-    }
-    function editProduct(id) { alert('Edit product: ' + id); }
-    function deleteProduct(id) { 
-      if (confirm('Delete this product?')) {
-        fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' })
-          .then(() => loadProducts(document.querySelector('select[name="brand_id"]').value))
-          .catch(err => console.error(err));
-      }
-    }
-
-    // Wardrobe Functions
-    async function searchWardrobe() {
-      const userId = document.getElementById('wardrobeUserSearch').value.trim();
-      if (!userId) {
-        alert('Please enter a user ID');
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/wardrobe/${userId}`);
-        const data = await res.json();
-
-        if (data.success) {
-          displayWardrobeItems(data.data);
-        } else {
-          alert(data.error || 'No wardrobe found');
-          document.getElementById('wardrobeList').innerHTML = '<div class="text-center text-gray-500">No items found</div>';
-        }
-      } catch (error) {
-        console.error('Error loading wardrobe:', error);
-        alert('Error: ' + error.message);
-      }
-    }
-
-    function displayWardrobeItems(items) {
-      const list = document.getElementById('wardrobeList');
-      if (!items || items.length === 0) {
-        list.innerHTML = '<div class="text-center text-gray-500">Wardrobe is empty</div>';
-        return;
-      }
-
-      list.innerHTML = items.map(item => `
-        <div class="border border-gray-200 rounded p-4 hover:shadow-md transition">
-          <div class="flex gap-4">
-            <img src="${item.product_image || '/placeholder.jpg'}" alt="${item.name}" class="w-24 h-24 object-cover rounded">
-            <div class="flex-1">
-              <h3 class="font-bold text-gray-900">${item.name}</h3>
-              <p class="text-sm text-gray-600">${item.brand_name}</p>
-              <p class="text-lg font-bold text-green-600 mt-1">€${item.price}</p>
-              <div class="flex gap-4 text-sm text-gray-600 mt-2">
-                ${item.color ? `<span>Color: ${item.color}</span>` : ''}
-                ${item.size ? `<span>Size: ${item.size}</span>` : ''}
-              </div>
-              ${item.try_on_image_url ? `<p class="text-xs text-blue-600 mt-2">✓ Try-on generated</p>` : ''}
-            </div>
-            <div class="flex gap-2">
-              <button class="px-3 py-1 text-sm bg-red-100 text-red-600 rounded hover:bg-red-200" onclick="removeWardrobeItem('${item.id}')">Remove</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    async function removeWardrobeItem(itemId) {
-      if (!confirm('Remove this item from wardrobe?')) return;
-
-      try {
-        const res = await fetch(`${API_BASE}/wardrobe/item/${itemId}`, { method: 'DELETE' });
-        const data = await res.json();
         
-        if (data.success) {
-          const userId = document.getElementById('wardrobeUserSearch').value.trim();
-          if (userId) await searchWardrobe();
-        }
+        document.getElementById('overviewContent').innerHTML = html;
       } catch (error) {
-        console.error('Error removing item:', error);
+        console.error('Fehler:', error);
+        document.getElementById('overviewContent').innerHTML = `<div class="text-red-500 text-center py-12">Fehler: ${error.message}</div>`;
       }
     }
-    // Load on page load
-    loadBrands();
+
+    function deleteBrand(id) {
+      if (confirm('Brand und alle Produkte löschen?')) {
+        fetch(`${API_BASE}/brands/${id}`, { method: 'DELETE' })
+          .then(r => r.json())
+          .then(d => {
+            if (d.success) {
+              alert('✅ Marke gelöscht!');
+              loadOverview();
+            } else {
+              alert('Fehler: ' + (d.error || 'Konnte nicht löschen'));
+            }
+          })
+          .catch(e => alert('Fehler: ' + e.message));
+      }
+    }
+
+    function deleteProduct(id) {
+      if (confirm('Produkt löschen?')) {
+        fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' })
+          .then(r => r.json())
+          .then(d => {
+            if (d.success) {
+              alert('✅ Produkt gelöscht!');
+              loadOverview();
+            } else {
+              alert('Fehler: ' + (d.error || 'Konnte nicht löschen'));
+            }
+          })
+          .catch(e => alert('Fehler: ' + e.message));
+      }
+    }
+
+    loadOverview();
+    setInterval(loadOverview, 30000);
   </script>
 </body>
 </html>

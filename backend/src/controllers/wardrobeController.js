@@ -1,12 +1,20 @@
-import Wardrobe from '../models/Wardrobe.js';
-import Product from '../models/Product.js';
+import { Wardrobe } from '../models/Wardrobe.js';
+import { Product } from '../models/Product.js';
 import SegmindVTONService from '../services/segmindService.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs-extra';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const tryOnService = new SegmindVTONService();
+let tryOnService = null;
+
+// Initialize service only when needed
+const getVTONService = () => {
+  if (!tryOnService && process.env.SEGMIND_API_KEY && process.env.SEGMIND_API_KEY !== 'placeholder_key_replace_later') {
+    tryOnService = new SegmindVTONService();
+  }
+  return tryOnService;
+};
 
 /**
  * Add item to user's wardrobe
@@ -209,8 +217,15 @@ export const generateWardrobeTryOn = async (req, res) => {
     }
 
     // Generate try-on
+    const service = getVTONService();
+    if (!service) {
+      return res.status(400).json({
+        success: false,
+        error: 'Virtual try-on service not configured. Please set SEGMIND_API_KEY'
+      });
+    }
     const uploadsDir = path.join(__dirname, '../../uploads/try-ons');
-    const result = await tryOnService.generateTryOn(
+    const result = await service.generateTryOn(
       selfieImagePath,
       productImage.image_url,
       uploadsDir,
@@ -282,8 +297,16 @@ export const generateWardrobeTryOnFromUpload = async (req, res) => {
     }
 
     // Generate try-on
+    const service = getVTONService();
+    if (!service) {
+      await fs.remove(selfiePath);
+      return res.status(400).json({
+        success: false,
+        error: 'Virtual try-on service not configured. Please set SEGMIND_API_KEY'
+      });
+    }
     const tryOnsDir = path.join(uploadsDir, 'try-ons');
-    const result = await tryOnService.generateTryOn(
+    const result = await service.generateTryOn(
       selfiePath,
       productImage.image_url,
       tryOnsDir,
