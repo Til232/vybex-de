@@ -84,7 +84,7 @@ Expected output:
 ```
 📚 Database initialized
 🚀 Server running on http://localhost:5001
-```
+````
 
 ### Step 2: Open Admin Dashboard
 ```bash

@@ -48,6 +48,12 @@
         <button class="tab-btn active px-4 py-2 border-b-2 border-blue-600 text-blue-600 font-medium" data-tab="brands">
           Manage Brands
         </button>
+        <button class="tab-btn px-4 py-2 border-b-2 border-transparent text-gray-700 font-medium hover:text-gray-900" data-tab="products">
+          Manage Products
+        </button>
+        <button class="tab-btn px-4 py-2 border-b-2 border-transparent text-gray-700 font-medium hover:text-gray-900" data-tab="wardrobe">
+          User Wardrobes
+        </button>
         <button class="tab-btn px-4 py-2 text-gray-600 font-medium" data-tab="products">
           Manage Products
         </button>
@@ -173,6 +179,30 @@
             <div id="productsList" class="space-y-4">
               <div class="text-center text-gray-500 py-8">
                 Select a brand to view its products
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wardrobe Tab -->
+        <div id="wardrobe-tab" class="hidden space-y-6">
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold mb-6">User Wardrobes</h2>
+            <div class="mb-6">
+              <label class="form-label">Search User ID</label>
+              <div class="flex gap-2">
+                <input 
+                  type="text" 
+                  id="wardrobeUserSearch" 
+                  placeholder="Enter user ID..."
+                  class="form-input flex-1"
+                >
+                <button onclick="searchWardrobe()" class="btn-primary">Search</button>
+              </div>
+            </div>
+            <div id="wardrobeList" class="space-y-4">
+              <div class="text-center text-gray-500 py-8">
+                Enter a user ID to view their wardrobe
               </div>
             </div>
           </div>
@@ -345,6 +375,74 @@
       }
     }
 
+    // Wardrobe Functions
+    async function searchWardrobe() {
+      const userId = document.getElementById('wardrobeUserSearch').value.trim();
+      if (!userId) {
+        alert('Please enter a user ID');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/wardrobe/${userId}`);
+        const data = await res.json();
+
+        if (data.success) {
+          displayWardrobeItems(data.data);
+        } else {
+          alert(data.error || 'No wardrobe found');
+          document.getElementById('wardrobeList').innerHTML = '<div class="text-center text-gray-500">No items found</div>';
+        }
+      } catch (error) {
+        console.error('Error loading wardrobe:', error);
+        alert('Error: ' + error.message);
+      }
+    }
+
+    function displayWardrobeItems(items) {
+      const list = document.getElementById('wardrobeList');
+      if (!items || items.length === 0) {
+        list.innerHTML = '<div class="text-center text-gray-500">Wardrobe is empty</div>';
+        return;
+      }
+
+      list.innerHTML = items.map(item => `
+        <div class="border border-gray-200 rounded p-4 hover:shadow-md transition">
+          <div class="flex gap-4">
+            <img src="${item.product_image || '/placeholder.jpg'}" alt="${item.name}" class="w-24 h-24 object-cover rounded">
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-900">${item.name}</h3>
+              <p class="text-sm text-gray-600">${item.brand_name}</p>
+              <p class="text-lg font-bold text-green-600 mt-1">€${item.price}</p>
+              <div class="flex gap-4 text-sm text-gray-600 mt-2">
+                ${item.color ? `<span>Color: ${item.color}</span>` : ''}
+                ${item.size ? `<span>Size: ${item.size}</span>` : ''}
+              </div>
+              ${item.try_on_image_url ? `<p class="text-xs text-blue-600 mt-2">✓ Try-on generated</p>` : ''}
+            </div>
+            <div class="flex gap-2">
+              <button class="px-3 py-1 text-sm bg-red-100 text-red-600 rounded hover:bg-red-200" onclick="removeWardrobeItem('${item.id}')">Remove</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function removeWardrobeItem(itemId) {
+      if (!confirm('Remove this item from wardrobe?')) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/wardrobe/item/${itemId}`, { method: 'DELETE' });
+        const data = await res.json();
+        
+        if (data.success) {
+          const userId = document.getElementById('wardrobeUserSearch').value.trim();
+          if (userId) await searchWardrobe();
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+      }
+    }
     // Load on page load
     loadBrands();
   </script>

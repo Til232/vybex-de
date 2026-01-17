@@ -14,14 +14,14 @@ router.post('/generate', generateTryOn);
 /**
  * POST /api/try-on/upload-and-generate
  * Generate virtual try-on from uploaded files
- * Files: sourceImage, referenceImage
- * Body: { category }
+ * Files: modelImage, clothImage
+ * Body: { category, steps, guidance, seed }
  */
 router.post(
   '/upload-and-generate',
   upload.fields([
-    { name: 'sourceImage', maxCount: 1 },
-    { name: 'referenceImage', maxCount: 1 }
+    { name: 'modelImage', maxCount: 1 },
+    { name: 'clothImage', maxCount: 1 }
   ]),
   generateTryOnFromUpload
 );

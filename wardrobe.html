@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wardrobe - VYBEX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <h1 class="text-2xl font-bold text-gray-900">VYBEX</h1>
+        <div class="flex gap-4">
+          <a href="/" class="text-gray-700 hover:text-gray-900">Shop</a>
+          <a href="/wardrobe.html" class="text-gray-900 font-semibold">My Wardrobe</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">My Wardrobe</h2>
+      <p class="text-gray-600">Manage your collection and try on items</p>
+    </div>
+
+    <!-- User ID Input -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+      <div class="flex gap-4 items-end">
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Your User ID
+          </label>
+          <input 
+            type="text" 
+            id="userId" 
+            placeholder="Enter your user ID"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+          >
+        </div>
+        <button 
+          onclick="loadWardrobe()"
+          class="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition"
+        >
+          Load Wardrobe
+        </button>
+      </div>
+    </div>
+
+    <!-- Wardrobe Grid -->
+    <div id="wardrobeContainer">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Wardrobe items will load here -->
+        <div class="col-span-3 text-center py-12">
+          <p class="text-gray-500">Enter your user ID to load your wardrobe</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Try-On Modal -->
+  <div id="tryOnModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
+        <h3 class="text-2xl font-bold text-gray-900">Try On Item</h3>
+        <button onclick="closeTryOnModal()" class="text-gray-500 hover:text-gray-900 text-2xl">×</button>
+      </div>
+
+      <div class="p-6">
+        <!-- Item Preview -->
+        <div class="mb-6">
+          <h4 class="text-lg font-semibold text-gray-900 mb-3">Item</h4>
+          <div class="flex gap-6">
+            <img id="itemImage" src="" alt="Item" class="w-32 h-40 object-cover rounded-lg">
+            <div>
+              <p id="itemName" class="text-lg font-semibold text-gray-900"></p>
+              <p id="itemBrand" class="text-gray-600"></p>
+              <p id="itemPrice" class="text-lg font-bold text-gray-900 mt-2"></p>
+              <div class="mt-3 space-y-1">
+                <p><span class="text-gray-600">Color:</span> <span id="itemColor" class="font-medium"></span></p>
+                <p><span class="text-gray-600">Size:</span> <span id="itemSize" class="font-medium"></span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload Selfie -->
+        <div class="mb-6">
+          <h4 class="text-lg font-semibold text-gray-900 mb-3">Upload Your Photo</h4>
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <input 
+              type="file" 
+              id="selfieInput" 
+              accept="image/*"
+              class="hidden"
+              onchange="previewSelfie()"
+            >
+            <button 
+              onclick="document.getElementById('selfieInput').click()"
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              Choose Photo
+            </button>
+            <p class="text-gray-600 mt-3">or drag and drop</p>
+            <img id="selfiePreview" src="" alt="Selfie preview" class="mt-4 max-w-xs mx-auto rounded-lg hidden">
+          </div>
+        </div>
+
+        <!-- Try-On Result -->
+        <div id="tryOnResultContainer" class="hidden mb-6">
+          <h4 class="text-lg font-semibold text-gray-900 mb-3">Try-On Result</h4>
+          <img id="tryOnResult" src="" alt="Try-on result" class="w-full rounded-lg">
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="tryOnLoading" class="hidden text-center py-8">
+          <div class="inline-block">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+          <p class="text-gray-600 mt-4">Generating try-on... This may take 30-60 seconds</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+          <button 
+            id="generateTryOnBtn"
+            onclick="generateTryOn()"
+            class="flex-1 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Generate Try-On
+          </button>
+          <button 
+            id="saveTryOnBtn"
+            onclick="saveTryOn()"
+            class="hidden flex-1 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+          >
+            Save Try-On
+          </button>
+          <button 
+            onclick="closeTryOnModal()"
+            class="flex-1 bg-gray-300 text-gray-900 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:5001/api';
+    let currentWardrobeItem = null;
+    let currentSelfieFile = null;
+
+    async function loadWardrobe() {
+      const userId = document.getElementById('userId').value.trim();
+      
+      if (!userId) {
+        alert('Please enter your user ID');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${API_BASE}/wardrobe/${userId}`);
+        
+        if (response.data.success) {
+          displayWardrobe(response.data.data);
+        } else {
+          alert(response.data.error || 'Failed to load wardrobe');
+        }
+      } catch (error) {
+        console.error('Error loading wardrobe:', error);
+        alert('Error loading wardrobe: ' + error.message);
+      }
+    }
+
+    function displayWardrobe(items) {
+      const container = document.getElementById('wardrobeContainer');
+      
+      if (!items || items.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-3 text-center py-12">
+            <p class="text-gray-500 text-lg">Your wardrobe is empty</p>
+            <a href="/" class="text-blue-600 hover:text-blue-700 mt-4 inline-block">Start shopping →</a>
+          </div>
+        `;
+        return;
+      }
+
+      const itemsHtml = items.map(item => `
+        <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
+          <div class="relative h-64 bg-gray-100">
+            <img 
+              src="${item.product_image || '/placeholder.jpg'}" 
+              alt="${item.name}"
+              class="w-full h-full object-cover"
+            >
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-gray-900 text-lg">${item.name}</h3>
+            <p class="text-gray-600 text-sm">${item.brand_name}</p>
+            <p class="text-lg font-bold text-gray-900 mt-2">€${item.price}</p>
+            
+            <div class="mt-3 space-y-1 text-sm text-gray-600">
+              ${item.color ? `<p><span class="font-medium">Color:</span> ${item.color}</p>` : ''}
+              ${item.size ? `<p><span class="font-medium">Size:</span> ${item.size}</p>` : ''}
+            </div>
+
+            ${item.try_on_image_url ? `
+              <div class="mt-3">
+                <p class="text-sm font-medium text-gray-700 mb-2">Try-On Preview:</p>
+                <img src="${item.try_on_image_url}" alt="Try-on" class="w-full h-32 object-cover rounded-lg">
+              </div>
+            ` : ''}
+
+            <div class="mt-4 flex gap-2">
+              <button 
+                onclick='openTryOnModal(${JSON.stringify(item)})'
+                class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+              >
+                Try On
+              </button>
+              <button 
+                onclick="removeFromWardrobe('${item.id}')"
+                class="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition text-sm font-medium"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${itemsHtml}</div>`;
+    }
+
+    function openTryOnModal(item) {
+      currentWardrobeItem = item;
+      currentSelfieFile = null;
+
+      // Populate modal with item details
+      document.getElementById('itemImage').src = item.product_image || '/placeholder.jpg';
+      document.getElementById('itemName').textContent = item.name;
+      document.getElementById('itemBrand').textContent = item.brand_name;
+      document.getElementById('itemPrice').textContent = `€${item.price}`;
+      document.getElementById('itemColor').textContent = item.color || 'Not specified';
+      document.getElementById('itemSize').textContent = item.size || 'Not specified';
+
+      // Reset form
+      document.getElementById('selfieInput').value = '';
+      document.getElementById('selfiePreview').src = '';
+      document.getElementById('selfiePreview').classList.add('hidden');
+      document.getElementById('tryOnResult').src = '';
+      document.getElementById('tryOnResultContainer').classList.add('hidden');
+      document.getElementById('tryOnLoading').classList.add('hidden');
+      document.getElementById('generateTryOnBtn').classList.remove('hidden');
+      document.getElementById('saveTryOnBtn').classList.add('hidden');
+
+      document.getElementById('tryOnModal').classList.remove('hidden');
+    }
+
+    function closeTryOnModal() {
+      document.getElementById('tryOnModal').classList.add('hidden');
+      currentWardrobeItem = null;
+    }
+
+    function previewSelfie() {
+      const input = document.getElementById('selfieInput');
+      const preview = document.getElementById('selfiePreview');
+
+      if (input.files && input.files[0]) {
+        currentSelfieFile = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.src = e.target.result;
+          preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    async function generateTryOn() {
+      if (!currentWardrobeItem) {
+        alert('No item selected');
+        return;
+      }
+
+      if (!currentSelfieFile) {
+        alert('Please upload a photo first');
+        return;
+      }
+
+      const generateBtn = document.getElementById('generateTryOnBtn');
+      generateBtn.disabled = true;
+
+      try {
+        document.getElementById('tryOnLoading').classList.remove('hidden');
+
+        const formData = new FormData();
+        formData.append('selfie', currentSelfieFile);
+
+        const response = await axios.post(
+          `${API_BASE}/wardrobe/${currentWardrobeItem.id}/try-on-upload`,
+          formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+
+        if (response.data.success) {
+          document.getElementById('tryOnResult').src = response.data.tryOnImage.path;
+          document.getElementById('tryOnResultContainer').classList.remove('hidden');
+          document.getElementById('generateTryOnBtn').classList.add('hidden');
+          document.getElementById('saveTryOnBtn').classList.remove('hidden');
+          document.getElementById('tryOnLoading').classList.add('hidden');
+        } else {
+          alert(response.data.error || 'Failed to generate try-on');
+          document.getElementById('tryOnLoading').classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('Try-on generation error:', error);
+        alert('Error: ' + (error.response?.data?.error || error.message));
+        document.getElementById('tryOnLoading').classList.add('hidden');
+      } finally {
+        generateBtn.disabled = false;
+      }
+    }
+
+    async function saveTryOn() {
+      if (!currentWardrobeItem) return;
+
+      try {
+        // Reload wardrobe to show updated try-on image
+        await loadWardrobe();
+        alert('Try-on saved to your wardrobe!');
+        closeTryOnModal();
+      } catch (error) {
+        console.error('Error saving try-on:', error);
+        alert('Error saving try-on: ' + error.message);
+      }
+    }
+
+    async function removeFromWardrobe(itemId) {
+      if (!confirm('Remove this item from your wardrobe?')) return;
+
+      try {
+        const response = await axios.delete(`${API_BASE}/wardrobe/item/${itemId}`);
+        
+        if (response.data.success) {
+          const userId = document.getElementById('userId').value.trim();
+          if (userId) await loadWardrobe();
+        } else {
+          alert(response.data.error || 'Failed to remove item');
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Drag and drop support
+    const dropZone = document.querySelector('.border-dashed');
+    if (dropZone) {
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('bg-gray-100');
+      });
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('bg-gray-100');
+      });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('bg-gray-100');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          document.getElementById('selfieInput').files = e.dataTransfer.files;
+          previewSelfie();
+        }
+      });
+    }
+  </script>
+</body>
+</html>

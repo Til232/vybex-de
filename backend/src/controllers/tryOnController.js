@@ -1,4 +1,4 @@
-import KlingAIVTONService from '../services/klingAiService.js';
+import SegmindVTONService from '../services/segmindService.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs-extra';
@@ -6,16 +6,16 @@ import fs from 'fs-extra';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Initialize service
-const tryOnService = new KlingAIVTONService();
+const tryOnService = new SegmindVTONService();
 
 export const generateTryOn = async (req, res) => {
   try {
-    const { sourceImagePath, referenceImagePath, category = 'upper_body' } = req.body;
+    const { modelImagePath, clothImagePath, category = 'upper_body', steps, guidance, seed } = req.body;
 
-    if (!sourceImagePath || !referenceImagePath) {
+    if (!modelImagePath || !clothImagePath) {
       return res.status(400).json({
         success: false,
-        error: 'sourceImagePath and referenceImagePath are required'
+        error: 'modelImagePath and clothImagePath are required'
       });
     }
 
@@ -24,19 +24,13 @@ export const generateTryOn = async (req, res) => {
     
     // Generate try-on
     const result = await tryOnService.generateTryOn(
-      sourceImagePath,
-      referenceImagePath,
+      modelImagePath,
+      clothImagePath,
       uploadsDir,
-      { category }
+      { category, steps, guidance, seed }
     );
 
-    res.json({
-      success: true,
-      taskId: result.taskId,
-      images: result.images,
-      totalImages: result.totalImages,
-      message: `Successfully generated ${result.totalImages} try-on image(s)`
-    });
+    res.json(result);
   } catch (error) {
     console.error('Try-on generation error:', error);
     res.status(500).json({
@@ -48,14 +42,14 @@ export const generateTryOn = async (req, res) => {
 
 export const generateTryOnFromUpload = async (req, res) => {
   try {
-    if (!req.files || !req.files.sourceImage || !req.files.referenceImage) {
+    if (!req.files || !req.files.modelImage || !req.files.clothImage) {
       return res.status(400).json({
         success: false,
-        error: 'Both sourceImage and referenceImage files are required'
+        error: 'Both modelImage and clothImage files are required'
       });
     }
 
-    const { category = 'upper_body' } = req.body;
+    const { category = 'upper_body', steps, guidance, seed } = req.body;
     const uploadsDir = path.join(__dirname, '../../uploads');
     const tempDir = path.join(uploadsDir, 'temp');
     const tryOnsDir = path.join(uploadsDir, 'try-ons');
@@ -64,34 +58,28 @@ export const generateTryOnFromUpload = async (req, res) => {
     await fs.ensureDir(tempDir);
 
     // Save uploaded files temporarily
-    const sourceFile = req.files.sourceImage[0];
-    const referenceFile = req.files.referenceImage[0];
+    const modelFile = req.files.modelImage[0];
+    const clothFile = req.files.clothImage[0];
 
-    const sourceImagePath = path.join(tempDir, `source-${Date.now()}.jpg`);
-    const referenceImagePath = path.join(tempDir, `reference-${Date.now()}.jpg`);
+    const modelImagePath = path.join(tempDir, `model-${Date.now()}.jpg`);
+    const clothImagePath = path.join(tempDir, `cloth-${Date.now()}.jpg`);
 
-    await fs.writeFile(sourceImagePath, sourceFile.buffer);
-    await fs.writeFile(referenceImagePath, referenceFile.buffer);
+    await fs.writeFile(modelImagePath, modelFile.buffer);
+    await fs.writeFile(clothImagePath, clothFile.buffer);
 
     // Generate try-on
     const result = await tryOnService.generateTryOn(
-      sourceImagePath,
-      referenceImagePath,
+      modelImagePath,
+      clothImagePath,
       tryOnsDir,
-      { category }
+      { category, steps, guidance, seed }
     );
 
     // Clean up temporary files
-    await fs.remove(sourceImagePath);
-    await fs.remove(referenceImagePath);
+    await fs.remove(modelImagePath);
+    await fs.remove(clothImagePath);
 
-    res.json({
-      success: true,
-      taskId: result.taskId,
-      images: result.images,
-      totalImages: result.totalImages,
-      message: `Successfully generated ${result.totalImages} try-on image(s)`
-    });
+    res.json(result);
   } catch (error) {
     console.error('Try-on generation from upload error:', error);
     res.status(500).json({
@@ -112,14 +100,12 @@ export const getTryOnStatus = async (req, res) => {
       });
     }
 
-    // Poll status
-    const result = await tryOnService.pollTaskUntilComplete(taskId);
-
+    // For Segmind, we return immediately, so just acknowledge
     res.json({
       success: true,
       taskId,
-      status: result.status,
-      images: result.images
+      status: 'completed',
+      message: 'Try-on completed'
     });
   } catch (error) {
     console.error('Try-on status check error:', error);

@@ -6,6 +6,7 @@ import { initDatabase } from './config/database.js';
 import brandRoutes from './routes/brands.js';
 import productRoutes from './routes/products.js';
 import tryOnRoutes from './routes/tryOn.js';
+import wardrobeRoutes from './routes/wardrobe.js';
 import 'dotenv/config';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -24,6 +25,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/api/brands', brandRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/try-on', tryOnRoutes);
+app.use('/api/wardrobe', wardrobeRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
