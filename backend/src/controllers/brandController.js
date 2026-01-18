@@ -35,7 +35,7 @@ export const brandController = {
   async getBrands(req, res) {
     try {
       const brands = await Brand.findAll();
-      res.json(brands);
+      res.json({ success: true, data: brands });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

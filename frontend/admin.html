@@ -279,16 +279,30 @@
 
     async function loadOverview() {
       try {
-        const brandsRes = await fetch(`${API_BASE}/brands`);
-        const brands = await brandsRes.json();
+        document.getElementById('overviewContent').innerHTML = '<div class="text-center text-gray-500 py-12">Lädt...</div>';
+        
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        
+        const brandsRes = await fetch(`${API_BASE}/brands`, { signal: controller.signal });
+        clearTimeout(timeout);
+        
+        const result = await brandsRes.json();
+        const brands = result.data || result;
         let html = '';
         
-        if (!brands || brands.length === 0) {
+        if (!brands || !Array.isArray(brands) || brands.length === 0) {
           html = '<div class="text-center text-gray-500 py-12 bg-white rounded-lg">Keine Brands</div>';
         } else {
           for (const brand of brands) {
-            const productsRes = await fetch(`${API_BASE}/products/brand/${brand.id}`);
-            const products = await productsRes.json() || [];
+            let products = [];
+            try {
+              const productsRes = await fetch(`${API_BASE}/products/brand/${brand.id}`, { signal: controller.signal });
+              const productResult = await productsRes.json();
+              products = productResult.data || productResult || [];
+            } catch (e) {
+              console.log('Produkte konnten nicht geladen werden für Brand:', brand.name);
+            }
 
             html += `
               <div class="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -339,7 +353,11 @@
         document.getElementById('overviewContent').innerHTML = html;
       } catch (error) {
         console.error('Fehler:', error);
-        document.getElementById('overviewContent').innerHTML = `<div class="text-red-500 text-center py-12">Fehler: ${error.message}</div>`;
+        if (error.name === 'AbortError') {
+          document.getElementById('overviewContent').innerHTML = `<div class="text-orange-500 text-center py-12 bg-yellow-50 rounded-lg p-4"><strong>⏱️ Timeout!</strong><br>Backend antwortet nicht. Stelle sicher, dass der Server auf Port 5001 läuft:<br><code style="background:white;padding:5px;border-radius:3px;">cd /Users/tilmann08/Projects/vybex-de/backend && PORT=5001 npm run dev</code></div>`;
+        } else {
+          document.getElementById('overviewContent').innerHTML = `<div class="text-red-500 text-center py-12 bg-red-50 rounded-lg p-4"><strong>❌ Fehler:</strong><br>${error.message}</div>`;
+        }
       }
     }
 
@@ -375,7 +393,8 @@
       }
     }
 
-    loadOverview();
+    // Load brands after a short delay to ensure page is ready
+    setTimeout(loadOverview, 500);
     setInterval(loadOverview, 30000);
   </script>
 </body>
